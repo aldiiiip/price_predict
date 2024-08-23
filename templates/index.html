@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent Prediction</title>
+    <title>Cheap Rental Prediction</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         function selectFurnished(button) {
@@ -41,7 +41,7 @@
 </head>
 <body>
     <body>
-        <h1>Cheap Rent Price Prediction</h1>
+        <h1>Cheap Rent Price Prediction in Malaysia</h1>
         <form action="/" method="POST">
             <label for="location">Location:</label>
             <select name="location" id="location"  onchange="checkFormFilled()">
@@ -95,7 +95,7 @@
         </form>
     
         {% if prediction is not none %}
-            <h2>Predicted Rent: {{ prediction }}</h2>
+            <h2>Predicted Rent: {{ prediction }} MYR</h2>
         {% endif %}
 </body>
 </html>
