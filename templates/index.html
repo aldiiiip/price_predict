@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function selectFurnished(button) {
+            // Deselect all buttons
+            var buttons = document.querySelectorAll('.furnished-button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            // Select the clicked button
+            button.classList.add('selected');
+            // Set the hidden input value to the selected button's value
+            document.getElementById('furnished').value = button.value;
+        }
+
+        function checkFormFilled() {
+            var location = document.getElementById('location').value;
+            var propertyType = document.getElementById('property_type').value;
+            var rooms = document.getElementById('rooms').value;
+            var parking = document.getElementById('parking').value;
+            var bathroom = document.getElementById('bathroom').value;
+            var size = document.getElementById('size').value;
+            var furnished = document.getElementById('furnished').value;
+
+            // Check if all fields are filled
+            if (location && propertyType && rooms && parking && bathroom && size && furnished) {
+                document.getElementById('predict-button').disabled = false;
+            } else {
+                document.getElementById('predict-button').disabled = true;
+            }
+        }
+
+        window.onload = function() {
+            // Initial check when the page loads
+            checkFormFilled();
+        }
+    </script> 
+</head>
+<body>
+    <body>
+        <h1>Cheap Rent Price Prediction</h1>
+        <form action="/" method="POST">
+            <label for="location">Location:</label>
+            <select name="location" id="location"  onchange="checkFormFilled()">
+                <option value="" selected></option>
+                {% for location in locations %}
+                    <option value="{{ location }}" {% if location == form_data['location'] %}selected{% endif %}>
+                        {{ location }}
+                    </option>
+                {% endfor %}
+            </select>
+            <br><br>
+    
+            <label for="property_type">Property type:</label>
+            <select name="property_type" id="property_type" onchange="checkFormFilled()">
+                <option value="" selected></option>
+                {% for property_type in property_types %}
+                    <option value="{{ property_type }}" {% if property_type == form_data['property_type'] %}selected{% endif %}>
+                        {{ property_type }}
+                    </option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+    
+            <label for="rooms">Rooms:</label>
+            <input type="number" id="rooms" name="rooms" value="{{ form_data['rooms'] }}" oninput="checkFormFilled()"><br><br>
+    
+            <label for="parking">Parking:</label>
+            <input type="number" id="parking" name="parking" value="{{ form_data['parking'] }}" oninput="checkFormFilled()"><br><br>
+    
+            <label for="bathroom">Bathroom:</label>
+            <input type="number" id="bathroom" name="bathroom" value="{{ form_data['bathroom'] }}" oninput="checkFormFilled()"><br><br>
+    
+            <label for="size">Size (sq.ft.):</label>
+            <input type="number" id="size" name="size" value="{{ form_data['size'] }}" oninput="checkFormFilled()"><br><br>
+
+            <label for="furnished">Furnished:</label>
+            {% for furnish in furnished %}
+                <button type="button" class="furnished-button {% if furnish == form_data['furnished'] %}selected{% endif %}" 
+                        value="{{ furnish }}" onchange="checkFormFilled()" 
+                        onclick="selectFurnished(this)">
+                    {{ furnish }}
+                </button>
+            {% endfor %}
+ 
+            <input type="hidden" name="furnished" id="furnished" value="{{ form_data['furnished'] }}">
+        
+            
+            <br>
+            <input type="submit" id="predict-button" value="Predict" disabled>
+        </form>
+    
+        {% if prediction is not none %}
+            <h2>Predicted Rent: {{ prediction }}</h2>
+        {% endif %}
+</body>
+</html>
