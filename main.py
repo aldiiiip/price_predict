@@ -45,7 +45,7 @@ def index():
         form_data['furnished'] = request.form['furnished']
 
         # Predict the rent price
-        predicted_rent = predict_rent_price(
+        predicted_rent = round(predict_rent_price(
             model_pipeline,
             form_data['location'],
             form_data['property_type'],
@@ -54,7 +54,7 @@ def index():
             float(form_data['bathroom']),
             float(form_data['size']),
             form_data['furnished']
-        )
+        )/10)*10
 
     # Pass form_data to template
     return render_template('index.html', 
